@@ -7,6 +7,8 @@ export const getRouter = () => {
 
   const router = createRouter({
     routeTree,
+    // Use the repository subpath on GitHub Pages and the root path locally.
+    basepath: import.meta.env.BASE_URL.replace(/\/$/, ""),
     context: { queryClient },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
