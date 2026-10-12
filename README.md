@@ -2,41 +2,31 @@
 
 Site institucional da Well Market para apresentar a proposta de mini mercado autônomo a síndicos, condomínios e empresas da Grande Vitória.
 
+## Tecnologia
+
+O site público usa **HTML, CSS e JavaScript puros**. Não usa React, TypeScript/TSX, Vite, Node.js, Bun, npm ou etapa de compilação para publicar.
+
 ## Publicação
 
-O site público é publicado pelo GitHub Actions no GitHub Pages:
+- Site: https://leorbr27.github.io/Wellmarket/
+- A cada alteração na branch `main`, o GitHub Actions copia os arquivos estáticos para uma pasta de publicação e publica no GitHub Pages.
+- Workflow: `.github/workflows/deploy-pages.yml`.
+- O site inclui página inicial, referências, FAQ com busca e categorias, menu responsivo, janela de contato e PDF comercial.
+- A publicação leva somente os arquivos públicos necessários. O código TSX legado que permaneça no repositório não participa da publicação nem é necessário para o funcionamento do site.
 
-- Endereço: https://leorbr27.github.io/Wellmarket/
-- A cada alteração enviada para a branch `main`, o workflow `.github/workflows/deploy-pages.yml` compila a aplicação e publica a versão estática.
-- O processo gera também `404.html` para manter a navegação de rotas como `/referencias` em visitas diretas e recarregamentos.
-- A configuração específica do GitHub Pages está em `vite.config.pages.ts`. O `vite.config.ts` original é mantido separado para não interferir no ambiente Lovable.
-- A aplicação é compilada para funcionar sem servidor. O caminho de base `/Wellmarket/` é configurado para os assets e para a navegação.
+## Arquivos do site
 
-## Desenvolvimento local
+- `index.html`: página inicial.
+- `styles.css`: estilos e responsividade.
+- `script.js`: menu móvel, FAQ, busca e janela de contato.
+- `referencias.html`: referências e orientações sobre publicação.
+- `src/assets/well-market-store.jpg`: imagem ilustrativa.
+- `docs/well-market-apresentacao.pdf`: apresentação comercial.
+- `public/favicon.svg`: ícone do site.
 
-Requisitos: Bun e uma versão atual do Node.js.
+## Contato
 
-```sh
-bun install
-bun run dev
-```
+- WhatsApp: (27) 99944-1733
+- E-mail: wellmarketbr@gmail.com
 
-## Testes
-
-```sh
-bun run test
-```
-
-## Estrutura principal
-
-- `src/routes/index.tsx`: página inicial.
-- `src/routes/referencias.tsx`: referências e orientações de publicação.
-- `src/components/`: cabeçalho, FAQ, contato e componentes de interface.
-- `src/data/well-market.ts`: condições comerciais e perguntas frequentes.
-- `docs/well-market-apresentacao.pdf`: apresentação comercial, publicada junto ao site.
-- `vite.config.pages.ts`: compilação estática específica do GitHub Pages.
-- `.github/workflows/deploy-pages.yml`: compilação e publicação automáticas.
-
-## Observações comerciais
-
-O site apresenta uma proposta sujeita a avaliação técnica e contrato. O formulário de avaliação é informativo e não envia solicitações: os dados reais de contato comercial ainda precisam ser definidos.
+O site não coleta nem armazena dados de visitantes. O contato ocorre ao abrir WhatsApp ou e-mail. A implantação depende de avaliação técnica e contrato.
