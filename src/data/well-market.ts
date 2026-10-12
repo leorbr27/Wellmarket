@@ -1,0 +1,46 @@
+export const commercialTerms = {
+  initialInvestment: 0,
+  pilotDays: 90,
+  availabilityHours: 24,
+  participationReferencePercent: 5,
+  participationGuaranteed: false,
+  cities: ['Vitória', 'Vila Velha', 'Serra', 'Cariacica', 'Viana'],
+  energyPaidBy: 'operator',
+  merchandiseLossPaidBy: 'operator',
+  installationRequiresAssessment: true,
+} as const;
+
+export const faqCategories = ['Todas as dúvidas', 'Custos e condições', 'Espaço e implantação', 'Operação e produtos', 'Segurança e privacidade', 'Contrato e aprovação'] as const;
+export type FaqCategory = typeof faqCategories[number];
+export const faqs: { question: string; answer: string; category: FaqCategory }[] = [
+  { category: 'Custos e condições', question: 'O condomínio precisa investir na implantação?', answer: 'Não. Na proposta comercial inicial, a Well Market assume implantação, equipamentos, sistema e estoque, sem investimento inicial do condomínio e sem cobrança de aluguel pelo espaço. A adequação do local, as licenças e as responsabilidades precisam ser avaliadas e formalizadas em contrato.' },
+  { category: 'Custos e condições', question: 'Quem paga a energia elétrica?', answer: 'O operador. A proposta prevê medição própria ou um critério acordado para apurar o consumo do mercado e reembolsar o condomínio, conforme definido em contrato.' },
+  { category: 'Custos e condições', question: 'Como funciona o piloto de 90 dias?', answer: 'A proposta é avaliar a aceitação e o desempenho da unidade durante 90 dias. O mix pode ser ajustado conforme as vendas. O contrato deve definir as condições do piloto, continuidade, encerramento e retirada da estrutura.' },
+  { category: 'Custos e condições', question: 'O condomínio pode receber uma participação nas vendas?', answer: 'Pode ser negociada uma participação sobre o faturamento. A referência comercial inicial é de 5%, sujeita à negociação conforme as condições da unidade. Não há promessa de lucro, faturamento mínimo ou rendimento garantido.' },
+  { category: 'Custos e condições', question: 'O mercado vai aumentar a taxa de condomínio?', answer: 'A proposta não exige investimento inicial do condomínio e prevê reembolso da energia pelo operador. Eventuais condições físicas, adaptações e responsabilidades devem ser esclarecidas na avaliação e no contrato, antes da implantação.' },
+  { category: 'Espaço e implantação', question: 'É necessário instalar um contêiner?', answer: 'Não. A primeira alternativa é avaliar uma área interna existente. Uma loja compacta ou um contêiner também podem ser considerados, dependendo do espaço e das características do condomínio.' },
+  { category: 'Espaço e implantação', question: 'Qual espaço é necessário para instalar o mercado?', answer: 'O PDF não estabelece uma metragem mínima. A visita técnica avalia área disponível, circulação, acessos, rotas de emergência, energia e conectividade para propor uma solução adequada. A instalação não é garantida para todo condomínio.' },
+  { category: 'Espaço e implantação', question: 'Vai precisar de obra ou atrapalhar a circulação?', answer: 'Não necessariamente haverá obra. A proposta prioriza instalações de baixo impacto e um acabamento compatível com o condomínio. O layout precisa preservar a circulação, os acessos e as rotas de emergência, respeitando as regras do local.' },
+  { category: 'Espaço e implantação', question: 'E se faltar energia ou internet?', answer: 'O projeto precisa prever monitoramento e procedimentos de contingência. Produtos refrigerados exigem controle específico. A internet disponível no condomínio pode ser utilizada quando tecnicamente adequada e formalmente autorizada; as responsabilidades do sistema de pagamento devem constar no projeto.' },
+  { category: 'Espaço e implantação', question: 'A Well Market também pode atender empresas?', answer: 'Empresas podem apresentar seu interesse para uma avaliação específica do espaço e do público. As condições desta apresentação foram formuladas para condomínios e não devem ser presumidas como automaticamente aplicáveis a uma empresa.' },
+  { category: 'Operação e produtos', question: 'Como o morador faz uma compra?', answer: 'A proposta é uma compra autônoma: acessar o espaço autorizado, escolher os produtos e efetuar o pagamento digital no sistema disponibilizado. A solução de acesso e os meios de pagamento aceitos serão definidos no projeto da unidade.' },
+  { category: 'Operação e produtos', question: 'Quem cuida da reposição, limpeza e manutenção?', answer: 'A Well Market, como operadora. Compras, estoque, inventário, reposição, limpeza e manutenção operacional não são tarefas do síndico. Não haverá atendente permanente; haverá visitas da equipe para essas atividades.' },
+  { category: 'Operação e produtos', question: 'Quais produtos podem estar disponíveis?', answer: 'O mix pode incluir bebidas, snacks, alimentos básicos, congelados, itens para churrasco, higiene, limpeza e produtos de emergência, conforme o perfil dos moradores e o espaço disponível. A seleção é ajustada com base na demanda e no giro.' },
+  { category: 'Operação e produtos', question: 'Os preços serão iguais aos do supermercado?', answer: 'Não há garantia de preços iguais. A estratégia busca preços competitivos para compras de conveniência. O objetivo não é substituir a compra mensal, e sim atender rapidamente uma necessidade sem sair do condomínio, inclusive à noite, aos domingos e feriados.' },
+  { category: 'Operação e produtos', question: 'Quem controla a validade e a qualidade dos alimentos?', answer: 'O operador responde pelo estoque, fornecedores, controle de validade, armazenamento e conservação. Produtos inadequados devem ser retirados. A operação precisa cumprir as exigências sanitárias aplicáveis ao município e à atividade.' },
+  { category: 'Operação e produtos', question: 'Os moradores podem sugerir produtos?', answer: 'Sim. O operador pode receber sugestões e ajustar o mix. A decisão considera demanda, vendas, giro, espaço e viabilidade. A administração do estoque continua sob responsabilidade da Well Market.' },
+  { category: 'Operação e produtos', question: 'Quem atende dúvidas e problemas com compras?', answer: 'O operador, por canais digitais a serem definidos para a unidade. O síndico não precisa atuar como atendimento comercial nem manter um funcionário dedicado ao mercado.' },
+  { category: 'Segurança e privacidade', question: 'Quem assume as perdas por furto de produtos?', answer: 'As perdas de mercadoria são assumidas pelo operador. Controle de acesso e pagamento, câmeras e acompanhamento do estoque ajudam a reduzir e medir os riscos. A gestão do estoque não é transferida ao condomínio.' },
+  { category: 'Segurança e privacidade', question: 'E se houver vandalismo ou quebra de equipamentos?', answer: 'É necessário distinguir danos de defeitos. Na proposta atual, danos ou vandalismo por terceiros dentro da área do condomínio são tratados como responsabilidade do condomínio, nos limites definidos em contrato. Defeitos e manutenção operacional ficam com o operador.' },
+  { category: 'Segurança e privacidade', question: 'O condomínio precisa vigiar o mercado?', answer: 'Não. O condomínio mantém sua segurança geral e suas regras de convivência. O operador acompanha a atividade comercial e as imagens necessárias à proteção da operação, respeitando as regras de acesso e privacidade.' },
+  { category: 'Segurança e privacidade', question: 'Como as câmeras e a privacidade serão tratadas?', answer: 'O contrato deve definir finalidade, acesso, armazenamento e responsabilidades sobre as imagens, considerando a LGPD. Não deve haver acesso indiscriminado. Os papéis e procedimentos precisam ser validados para cada implantação.' },
+  { category: 'Contrato e aprovação', question: 'Precisa de aprovação em assembleia?', answer: 'A necessidade e o procedimento dependem da convenção, do regimento, do espaço e da forma de implantação. O projeto deve seguir o procedimento condominial adequado. Uma autorização informal do síndico não é necessariamente suficiente.' },
+  { category: 'Contrato e aprovação', question: 'Quem responde pela atividade comercial e emite a nota fiscal?', answer: 'O operador é responsável pela atividade comercial, estoque, abastecimento e conformidade da operação. A empresa operadora deverá organizar a emissão fiscal conforme seu enquadramento e as regras aplicáveis. Responsabilidades específicas precisam de revisão jurídica.' },
+  { category: 'Contrato e aprovação', question: 'Como ficam as licenças e exigências sanitárias?', answer: 'O enquadramento e a regularização dependem da atividade e do município. A implantação exige avaliação das regras locais e das boas práticas aplicáveis. Esta apresentação comercial não substitui análise jurídica, tributária, sanitária ou de engenharia.' },
+];
+
+export function filterFaqs(category: FaqCategory, query: string) {
+  const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const search = normalize(query.trim());
+  return faqs.filter(faq => (category === 'Todas as dúvidas' || faq.category === category) && normalize(`${faq.question} ${faq.answer}`).includes(search));
+}
