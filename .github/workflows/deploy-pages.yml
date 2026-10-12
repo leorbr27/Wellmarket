@@ -15,53 +15,40 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Baixar o repositório
-        uses: actions/checkout@v4
-
-      - name: Instalar Bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Instalar dependências
-        run: bun install --frozen-lockfile
-
-      - name: Executar testes
-        run: bun run test
-
-      - name: Compilar para hospedagem estática
-        run: bunx vite build --config vite.config.pages.ts
-
-      - name: Preparar arquivos do GitHub Pages
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -d dist/client
-          if [ -f dist/client/_shell.html ]; then
-            cp dist/client/_shell.html dist/client/index.html
-          fi
-          test -f dist/client/index.html
-          mkdir -p dist/client/docs
-          cp docs/well-market-apresentacao.pdf dist/client/docs/well-market-apresentacao.pdf
-          cp dist/client/index.html dist/client/404.html
-          touch dist/client/.nojekyll
-
-      - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v5
-
-      - name: Enviar artefato do site
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/client
-
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
     steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Preparar arquivos estáticos (sem build)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/site/docs dist/site/src/assets dist/site/public
+          cp index.html styles.css script.js referencias.html dist/site/
+          cp docs/well-market-apresentacao.pdf dist/site/docs/well-market-apresentacao.pdf
+          cp src/assets/well-market-store.jpg dist/site/src/assets/well-market-store.jpg
+          cp public/favicon.svg dist/site/public/favicon.svg
+          cp public/robots.txt dist/site/robots.txt
+          touch dist/site/.nojekyll
+          test -s dist/site/index.html
+          test -s dist/site/styles.css
+          test -s dist/site/script.js
+          test -s dist/site/referencias.html
+          test -s dist/site/docs/well-market-apresentacao.pdf
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar arquivos do site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/site
+
       - name: Publicar site
         id: deployment
         uses: actions/deploy-pages@v4
