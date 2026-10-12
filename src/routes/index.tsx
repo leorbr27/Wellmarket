@@ -41,7 +41,7 @@ function Index() {
       <section className="hero">
         <img className="hero-photo" src={storeImage} alt="Visualização ilustrativa de um mini mercado com prateleiras, refrigeradores e pagamento autônomo" width={1536} height={1024} fetchPriority="high" />
         <div className="hero-overlay" />
-        <div className="container-wide hero-content"><div className="eyebrow"><span className="h-1.5 w-1.5 rounded-full bg-secondary" /> Seu dia a dia, muito mais prático</div>
+        <div className="container-wide hero-content"><div className="eyebrow"><span className="h-1.5 w-1.5 rounded-full bg-secondary" /> Bom te ver bem</div>
           <h1>Well Market.<br />Seu mini mercado,<br /><em>pertinho de você.</em></h1>
           <p>Conveniência 24 horas dentro do seu condomínio.<br />Sem investimento inicial. Sem complicar a gestão.<br />Com tudo o que faz falta na hora que você precisa.</p>
           <div className="hero-actions"><Button variant="hero" size="cta" onClick={openContact}>Quero no meu condomínio <ArrowUpRight /></Button><Button variant="heroOutline" size="cta" asChild><a href="#como-funciona"><Play size={14} /> Veja como funciona</a></Button></div>
