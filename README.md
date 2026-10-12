@@ -8,6 +8,7 @@ O site público é publicado pelo GitHub Actions no GitHub Pages:
 
 - Endereço: https://leorbr27.github.io/Wellmarket/
 - A cada alteração enviada para a branch `main`, o workflow `.github/workflows/deploy-pages.yml` compila a aplicação e publica a versão estática.
+- O processo gera também `404.html` para manter a navegação de rotas como `/referencias` em visitas diretas e recarregamentos.
 - A configuração específica do GitHub Pages está em `vite.config.pages.ts`. O `vite.config.ts` original é mantido separado para não interferir no ambiente Lovable.
 - A aplicação é compilada para funcionar sem servidor. O caminho de base `/Wellmarket/` é configurado para os assets e para a navegação.
 
