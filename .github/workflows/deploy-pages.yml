@@ -27,6 +27,9 @@ jobs:
       - name: Instalar dependências
         run: bun install --frozen-lockfile
 
+      - name: Executar testes
+        run: bun run test
+
       - name: Compilar para hospedagem estática
         run: bunx vite build --config vite.config.pages.ts
 
