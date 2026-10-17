@@ -10,3 +10,68 @@
 .whatsapp-sticky a{display:flex;align-items:center;justify-content:center;gap:9px;width:min(520px,100%);margin:auto;min-height:42px;padding:9px 16px;border-radius:5px;background:#168b50;color:white;font-size:16px;font-weight:800;}
 .whatsapp-sticky a:hover{background:#117340;}
 @media(prefers-reduced-motion:reduce){.whatsapp-sticky{transition:none}}
+
+
+/* Well Market CRO refinement — October 2026 */
+.resident-timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;position:relative;margin-top:45px}
+.resident-timeline .timeline-step{position:relative;min-width:0;padding:24px 20px;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.05);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.resident-timeline .timeline-step:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 10px 28px rgba(0,0,0,.09)}
+.resident-timeline .step-marker{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.resident-timeline .step-number{padding:0;margin:0;border:0;font-size:32px;line-height:1.2;transition:color .25s ease}
+.resident-timeline .step-icon{display:grid;place-items:center;width:46px;height:46px;flex-shrink:0;border-radius:12px;background:#fae9e5;color:var(--primary);font-size:23px}
+.resident-timeline .timeline-step:hover .step-number{color:var(--primary-dark)}
+.resident-timeline .timeline-step h3{font-size:18px;margin-bottom:12px}
+.resident-timeline .timeline-step p{font-size:16px;line-height:1.75;color:var(--muted);margin-bottom:0}
+.pilot-highlight{display:flex;align-items:flex-start;gap:16px;margin:0 0 32px;padding:22px 24px;border:1px solid #a7e5c5;border-radius:16px;background:#effbf4;box-shadow:0 4px 20px rgba(0,0,0,.04)}
+.pilot-icon{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;border-radius:50%;background:#d1fae0;color:#087443;font-size:22px;font-weight:800}
+.pilot-highlight strong{display:block;color:#075c36;font-size:20px;margin-bottom:5px}
+.pilot-highlight p{margin:0;color:#245b40;font-size:16px;line-height:1.7}
+.responsibility-grid{gap:24px;align-items:stretch}
+.responsibility-grid>div{padding:26px;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.05);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.responsibility-grid>div:hover{transform:translateY(-3px);border-color:var(--primary);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.responsibility-grid h3{line-height:1.4;margin-bottom:18px}
+.responsibility-grid li{gap:12px;line-height:1.65}
+.responsibility-grid li span{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex:0 0 24px;margin-top:1px;border-radius:50%;background:#d1fae0;color:#087443;font-size:16px}
+.presentation-button{border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,.05);white-space:normal;text-align:center}
+.presentation-button:hover{border-color:var(--primary);color:var(--primary-dark)}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary);border-radius:10px;box-shadow:0 5px 16px rgba(189,41,38,.18)}
+.btn-primary:hover{background:var(--primary-dark);border-color:var(--primary-dark)}
+.hero-primary-action,.contact-primary-action,.modal-primary-action{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0}
+.cta-microcopy{margin:0;font-size:16px;line-height:1.5;color:var(--muted)}
+.hero .cta-microcopy{color:var(--hero-copy)}
+.contact-band .btn-primary{background:#fff;color:var(--primary-dark);border-color:#fff}
+.contact-band .btn-primary:hover{background:#f7f3ef}
+.contact-band .cta-microcopy{color:#fff}
+.modal-primary-action{margin-top:20px}
+.modal-primary-action .btn{margin-top:0;width:100%}
+.site-header{background:rgba(255,253,250,.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid rgba(231,223,217,.8);box-shadow:0 3px 16px rgba(0,0,0,.035)}
+html{scroll-padding-top:100px}
+.region{gap:10px}
+.region span{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border:1px solid rgba(255,255,255,.5);border-radius:999px;background:rgba(255,255,255,.08);transition:background .2s ease,border-color .2s ease,transform .2s ease}
+.region span:hover{background:rgba(255,255,255,.18);border-color:#fff;transform:translateY(-2px)}
+.whatsapp-sticky a{position:relative;border-radius:12px;box-shadow:0 5px 18px rgba(22,139,80,.22);animation:whatsapp-pulse 3s ease-in-out infinite}
+.whatsapp-sticky a::before{content:"Fale com um consultor";position:absolute;right:0;bottom:calc(100% + 12px);padding:10px 14px;border-radius:10px;background:var(--night);color:#fff;font-size:16px;font-weight:700;white-space:nowrap;opacity:0;visibility:hidden;transform:translateY(5px);transition:opacity .2s ease,transform .2s ease,visibility .2s ease;pointer-events:none}
+.whatsapp-sticky a::after{content:"";position:absolute;right:22px;bottom:calc(100% + 4px);border:5px solid transparent;border-top-color:var(--night);opacity:0;visibility:hidden;transition:opacity .2s ease;pointer-events:none}
+.whatsapp-sticky a:hover::before,.whatsapp-sticky a:hover::after,.whatsapp-sticky a:focus-visible::before,.whatsapp-sticky a:focus-visible::after{opacity:1;visibility:visible;transform:translateY(0)}
+@keyframes whatsapp-pulse{0%,100%{box-shadow:0 5px 18px rgba(22,139,80,.20)}50%{box-shadow:0 5px 22px rgba(22,139,80,.34)}}
+@media(max-width:760px){
+ html{scroll-padding-top:82px}
+ .site-header{background:rgba(255,253,250,.94)}
+ .nav-links{background:rgba(255,253,250,.97);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+ .resident-timeline{grid-template-columns:minmax(0,1fr);gap:0;margin-left:8px}
+ .resident-timeline .timeline-step{margin-left:24px;padding:20px;border-radius:12px}
+ .resident-timeline .timeline-step:not(:last-child){margin-bottom:22px}
+ .resident-timeline .timeline-step:not(:last-child)::before{content:"";position:absolute;left:-25px;top:46px;bottom:-24px;width:2px;background:var(--border)}
+ .resident-timeline .step-marker{justify-content:flex-start;gap:14px;margin-bottom:15px}
+ .resident-timeline .step-number{font-size:28px}
+ .pilot-highlight{padding:18px;gap:12px}
+ .responsibility-grid>div{padding:20px}
+ .hero-primary-action,.contact-primary-action{width:100%}
+ .hero-primary-action .btn,.contact-primary-action .btn{width:100%}
+ .hero-actions{align-items:stretch}
+ .hero-actions>.btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ .resident-timeline .timeline-step,.resident-timeline .step-number,.topic-card,.responsibility-grid>div,.region span,.whatsapp-sticky a,.whatsapp-sticky a::before,.whatsapp-sticky a::after{transition:none!important;animation:none!important}
+ .resident-timeline .timeline-step:hover,.topic-card:hover,.responsibility-grid>div:hover,.region span:hover{transform:none}
+}
