@@ -29,7 +29,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p dist/site/docs dist/site/src/assets dist/site/public
-          cp index.html styles.css script.js referencias.html dist/site/
+          cp index.html styles.css script.js referencias.html rejeicoes.html dist/site/
           cp docs/well-market-apresentacao.pdf dist/site/docs/well-market-apresentacao.pdf
           cp src/assets/well-market-store.jpg dist/site/src/assets/well-market-store.jpg
           cp public/favicon.svg dist/site/public/favicon.svg
@@ -39,6 +39,7 @@ jobs:
           test -s dist/site/styles.css
           test -s dist/site/script.js
           test -s dist/site/referencias.html
+          test -s dist/site/rejeicoes.html
           test -s dist/site/docs/well-market-apresentacao.pdf
 
       - name: Configurar GitHub Pages
