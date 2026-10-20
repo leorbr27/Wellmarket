@@ -4,6 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#bd2926">
 <meta name="description" content="Painel interno de prospecção B2B da Well Market: 100 Rejeições.">
+<meta name="wellmarket-api-url" content="">
 <title>100 Rejeições | Well Market</title>
 <link rel="icon" href="./public/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./styles.css">
@@ -72,8 +73,67 @@ let prospects=[];
 const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const load=()=>{try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');prospects=Array.isArray(x)?x:[];prospects.forEach(p=>{if(!Array.isArray(p.conversations))p.conversations=[]})}catch{prospects=[]}};
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(prospects));return true}catch{flash('Não foi possível salvar neste navegador. Verifique o espaço disponível ou as configurações de privacidade.');return false}};
+const API_BASE_URL=($('wellmarket-api-url')?.content||'').trim().replace(/\/$/,'');
+let serverSnapshot=[];
+let syncQueue=Promise.resolve();
+const apiRequest=async(path,options={})=>{
+ if(!API_BASE_URL)throw new Error('A URL da API ainda não foi configurada.');
+ const response=await fetch(API_BASE_URL+path,{...options,headers:{'Content-Type':'application/json',...(options.headers||{})}});
+ const data=response.status===204?null:await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(data?.error||'Erro ao acessar a API.');
+ return data;
+};
+const localBackup=()=>{try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(x)?x:[]}catch{return []}};
+const normalizeProspect=p=>({...p,conversations:Array.isArray(p.conversations)?p.conversations:[]});
+const load=async()=>{
+ const backup=localBackup();
+ if(!API_BASE_URL){prospects=backup.map(normalizeProspect);return}
+ try{
+  let [remoteProspects,remoteConversations]=await Promise.all([apiRequest('/prospects'),apiRequest('/conversations')]);
+  if(!remoteProspects.length&&backup.length){
+   for(const p of backup){
+    const {conversations=[],...company}=p;
+    await apiRequest('/prospects',{method:'POST',body:JSON.stringify(company)});
+    for(const c of conversations)await apiRequest('/conversations',{method:'POST',body:JSON.stringify(c)});
+   }
+   [remoteProspects,remoteConversations]=await Promise.all([apiRequest('/prospects'),apiRequest('/conversations')]);
+   localStorage.removeItem(KEY);
+   flash('Migração dos registros locais para o Neon concluída.');
+  }
+  const byProspect=new Map(remoteProspects.map(p=>[p.id,normalizeProspect(p)]));
+  for(const c of remoteConversations){const p=byProspect.get(c.prospectionId);if(p)p.conversations.push(c)}
+  prospects=[...byProspect.values()];
+  serverSnapshot=JSON.parse(JSON.stringify(prospects));
+ }catch(error){
+  prospects=backup.map(normalizeProspect);
+  flash('Não foi possível conectar à API/Neon. '+error.message+(backup.length?' Os dados locais foram mantidos como contingência.':''));
+ }
+};
+const save=()=>{
+ try{localStorage.setItem(KEY,JSON.stringify(prospects))}catch{}
+ if(!API_BASE_URL)return true;
+ const target=JSON.parse(JSON.stringify(prospects));
+ syncQueue=syncQueue.then(async()=>{
+  const previous=serverSnapshot;
+  const oldProspects=new Map(previous.map(p=>[p.id,p]));
+  const oldConversations=new Map(previous.flatMap(p=>(p.conversations||[]).map(c=>[c.id,c])));
+  const newProspectIds=new Set(target.map(p=>p.id));
+  const newConversationIds=new Set(target.flatMap(p=>(p.conversations||[]).map(c=>c.id)));
+  for(const p of target){
+   const exists=oldProspects.has(p.id);
+   const {conversations=[],...company}=p;
+   await apiRequest(exists?'/prospects/'+encodeURIComponent(p.id):'/prospects',{method:exists?'PUT':'POST',body:JSON.stringify(company)});
+  }
+  for(const p of target)for(const c of (p.conversations||[])){
+   const exists=oldConversations.has(c.id);
+   await apiRequest(exists?'/conversations/'+encodeURIComponent(c.id):'/conversations',{method:exists?'PUT':'POST',body:JSON.stringify(c)});
+  }
+  for(const [id,c] of oldConversations)if(!newConversationIds.has(id))await apiRequest('/conversations/'+encodeURIComponent(id),{method:'DELETE'});
+  for(const [id] of oldProspects)if(!newProspectIds.has(id))await apiRequest('/prospects/'+encodeURIComponent(id),{method:'DELETE'});
+  serverSnapshot=target;
+ }).catch(error=>{flash('Falha ao sincronizar com o Neon: '+error.message+'. O backup local foi mantido; tente novamente após restabelecer a API.')});
+ return true
+};
 const flash=msg=>{const el=$('r-flash');el.textContent=msg;el.classList.add('show');window.setTimeout(()=>el.classList.remove('show'),5500)};
 const formatDate=s=>{if(!s)return '—';const p=s.split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:s};
 const toLocalDateTime=s=>{const d=s?new Date(s):new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'T'+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
@@ -110,7 +170,7 @@ $('r-conversation-cancel').addEventListener('click',closeConversationForm);
 $('r-conversation-list').addEventListener('click',e=>{const edit=e.target.closest('[data-conv-edit]');if(edit){const p=prospects.find(x=>x.id===activeProspectId);const c=p?.conversations.find(x=>x.id===edit.dataset.convEdit);if(c)openConversationForm(c);return}const del=e.target.closest('[data-conv-delete]');if(del){const p=prospects.find(x=>x.id===activeProspectId);const c=p?.conversations.find(x=>x.id===del.dataset.convDelete);if(!p||!c)return;if(!window.confirm('Excluir esta conversa do histórico?'))return;p.conversations=p.conversations.filter(x=>x.id!==c.id);if(save()){render();renderConversations(p);flash('Conversa excluída.')}}});
 $('r-conversation-form').addEventListener('submit',e=>{e.preventDefault();const p=prospects.find(x=>x.id===activeProspectId);if(!p)return;const id=$('r-conversation-id').value||('c_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7));const existing=p.conversations.find(x=>x.id===id);const confirmed=$('r-conv-confirmed-rejection').checked;const outcome=confirmed?'recusado':$('r-conv-outcome').value;const c={id,prospectionId:p.id,occurredAt:new Date($('r-conv-date').value).toISOString(),location:$('r-conv-location').value.trim(),personName:$('r-conv-person').value.trim(),jobTitle:$('r-conv-job').value.trim(),phone:$('r-conv-phone').value.trim(),email:$('r-conv-email').value.trim(),channel:$('r-conv-channel').value,summary:$('r-conv-summary').value.trim(),interestLevel:$('r-conv-interest').value,objections:$('r-conv-objections').value.trim(),nextStep:$('r-conv-next-step').value.trim(),nextContactAt:$('r-conv-next-date').value?new Date($('r-conv-next-date').value).toISOString():null,outcome,isConfirmedRejection:confirmed,responsibleUserId:$('r-conv-responsible').value.trim(),notes:$('r-conv-notes').value.trim(),createdAt:existing?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};if(existing)p.conversations=p.conversations.map(x=>x.id===id?c:x);else p.conversations.push(c);if(confirmed&&p.status==='PENDENTE')p.status='REJEITADO';if(outcome==='convertido')p.status='CONTRATO_FECHADO';else if(['negociacao','proposta_enviada','proposta_solicitada','reuniao_agendada'].includes(outcome)&&p.status==='PENDENTE')p.status='EM_NEGOCIACAO';if(save()){closeConversationForm();render();renderConversations(p);flash(existing?'Conversa atualizada.':'Conversa registrada no histórico.')}});
 const toggle=$('mobile-toggle'),nav=$('nav-links');if(toggle&&nav)toggle.addEventListener('click',()=>{const open=nav.classList.toggle('menu-open');toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'✕':'☰'});
-load();render();
+load().finally(()=>render());
 })();
 </script>
 </body></html>
