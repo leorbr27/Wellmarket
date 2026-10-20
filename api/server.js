@@ -280,9 +280,14 @@ app.use((error, _req, res, _next) => {
   res.status(500).json({ error: "Erro interno da API." });
 });
 
-const server = app.listen(port, () => console.log(`API 100 Rejeições disponível na porta ${port}`));
-async function shutdown() {
-  server.close(async () => { await pool.end(); process.exit(0); });
+export default app;
+
+// A Vercel importa o app como Serverless Function; localmente o processo escuta a porta.
+if (!process.env.VERCEL) {
+  const server = app.listen(port, () => console.log(`API 100 Rejeições disponível na porta ${port}`));
+  async function shutdown() {
+    server.close(async () => { await pool.end(); process.exit(0); });
+  }
+  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", shutdown);
 }
-process.on("SIGTERM", shutdown);
-process.on("SIGINT", shutdown);
