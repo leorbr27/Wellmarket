@@ -1,0 +1,80 @@
+name: Temporary Vercel API integration validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/temporary-api-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate health, create/read/delete prospect through Vercel API
+        env:
+          API_BASE: https://wellmarket-i77k.vercel.app
+        run: |
+          node --input-type=module <<'NODE'
+          const base = process.env.API_BASE;
+          let testId;
+          const request = async (path, options = {}) => {
+            const response = await fetch(base + path, {
+              ...options,
+              headers: { ...(options.body ? { "content-type": "application/json" } : {}), ...(options.headers || {}) },
+              signal: AbortSignal.timeout(20000)
+            });
+            const text = await response.text();
+            let data;
+            try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+            console.log(options.method || "GET", path, "=>", response.status, JSON.stringify(data));
+            if (!response.ok) throw new Error(`${options.method || "GET"} ${path} failed with HTTP ${response.status}: ${text}`);
+            return { response, data };
+          };
+          try {
+            const health = await request("/health");
+            if (health.data?.status !== "ok" || health.data?.database !== "connected") {
+              throw new Error("Health check did not confirm Neon connectivity.");
+            }
+            const marker = `TESTE TECNICO 100 REJEICOES ${new Date().toISOString()} ${process.env.GITHUB_RUN_ID}`;
+            const created = await request("/prospects", {
+              method: "POST",
+              body: JSON.stringify({
+                company: marker,
+                local: "OUTROS",
+                offer: "AMBOS",
+                status: "PENDENTE",
+                source: "TESTE_AUTOMATIZADO",
+                responsible: "GitHub Actions"
+              })
+            });
+            testId = created.data?.id;
+            if (!testId || created.data?.company !== marker) throw new Error("POST did not return the expected test prospect.");
+            const listed = await request("/prospects");
+            if (!Array.isArray(listed.data) || !listed.data.some(p => p.id === testId && p.company === marker)) {
+              throw new Error("GET /prospects did not return the created test prospect.");
+            }
+            const deleted = await fetch(base + "/prospects/" + encodeURIComponent(testId), {
+              method: "DELETE",
+              signal: AbortSignal.timeout(20000)
+            });
+            const deleteText = await deleted.text();
+            console.log("DELETE /prospects/" + testId, "=>", deleted.status, deleteText);
+            if (deleted.status !== 204) throw new Error("DELETE did not return HTTP 204.");
+            testId = undefined;
+            const afterDelete = await request("/prospects");
+            if (afterDelete.data.some(p => p.id === created.data.id)) throw new Error("Test prospect still appears after DELETE.");
+            console.log("PASS: health, POST, GET, DELETE and post-delete verification all succeeded.");
+          } finally {
+            if (testId) {
+              const cleanup = await fetch(base + "/prospects/" + encodeURIComponent(testId), {
+                method: "DELETE",
+                signal: AbortSignal.timeout(20000)
+              });
+              console.log("Cleanup DELETE /prospects/" + testId, "=>", cleanup.status);
+            }
+          }
+          NODE
